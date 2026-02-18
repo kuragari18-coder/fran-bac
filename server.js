@@ -43,12 +43,8 @@ app.use("/api/order", orderRoutes);
 app.use("/api/auth", userRoutes);
 app.use("/api/products", productRoutes);
 
-// Serve frontend static files (when running from project root)
-const frontendPath = path.join(__dirname, "..", "frontend");
-app.use(express.static(frontendPath));
-app.use((req, res, next) => {
-  if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) return next();
-  res.sendFile(path.join(frontendPath, "index.html"));
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "Backend is running" });
 });
 
 app.listen(PORT, () => {
