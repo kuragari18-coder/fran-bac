@@ -1,0 +1,57 @@
+const express = require("express")
+const cors = require("cors");
+const path = require("path");
+require("dotenv").config();
+const app = express();
+const orderRoutes = require("./routes/order.routes");
+const userRoutes = require("./routes/auth.routes");
+const productRoutes = require("./routes/product.routes");
+
+const connectDb = require("./config/db");
+
+const allowedOrigins = [
+  "https://ecommerce-frontend-ruddy-kappa.vercel.app",
+  "http://localhost:5000",
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "http://localhost:5500",
+  "http://127.0.0.1:5000",
+  "http://127.0.0.1:3000",
+  "http://127.0.0.1:5500",
+  "http://127.0.0.1:8080",
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || origin === "null" || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+const PORT = process.env.PORT || 5000;
+
+app.use("/api/order", orderRoutes);
+app.use("/api/auth", userRoutes);
+app.use("/api/products", productRoutes);
+
+// Serve frontend static files (when running from project root)
+const frontendPath = path.join(__dirname, "..", "frontend");
+app.use(express.static(frontendPath));
+app.use((req, res, next) => {
+  if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) return next();
+  res.sendFile(path.join(frontendPath, "index.html"));
+});
+
+app.listen(PORT, () => {
+  connectDb();
+  console.log(`Server running on http://localhost:${PORT}`);
+});
