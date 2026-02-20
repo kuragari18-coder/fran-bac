@@ -11,6 +11,8 @@ const connectDb = require("./config/db");
 
 const allowedOrigins = [
   "https://ecommerce-frontend-ruddy-kappa.vercel.app",
+  "https://franixia.netlify.app",
+  "https://www.franixia.netlify.app",
   "http://localhost:5000",
   "http://localhost:5173",
   "http://localhost:3000",
