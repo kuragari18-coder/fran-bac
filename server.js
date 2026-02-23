@@ -3,6 +3,7 @@ const cors = require("cors");
 const path = require("path");
 require("dotenv").config();
 const app = express();
+app.set("trust proxy", 1);
 const orderRoutes = require("./routes/order.routes");
 const userRoutes = require("./routes/auth.routes");
 const productRoutes = require("./routes/product.routes");

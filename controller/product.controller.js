@@ -4,7 +4,9 @@ const Product = require("../models/product.model");
 
 const buildImageUrl = (req, filename) => {
   if (!filename) return undefined;
-  const baseUrl = `${req.protocol}://${req.get("host")}`;
+  const forwardedProto = req.get("x-forwarded-proto");
+  const protocol = forwardedProto ? forwardedProto.split(",")[0] : req.protocol;
+  const baseUrl = `${protocol}://${req.get("host")}`;
   return `${baseUrl}/uploads/${filename}`;
 };
 
